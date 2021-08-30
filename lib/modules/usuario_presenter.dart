@@ -8,8 +8,6 @@ abstract class UsuarioListViewContract {
 }
 
 
-
-
 class UsuarioListPresenter{
   late UsuarioListViewContract _view;
   late UsuarioRepository _repository;
@@ -18,10 +16,15 @@ class UsuarioListPresenter{
     _repository = new Injector().usuarioRepository;
   }
 
-  void loadUsuario(){
-    _repository.fetchCurrencies()
+  void loadUsuario(String id){
+    _repository.fetchCurrencies(id)
         .then((c) => _view.onLoadUsuarioComplete(c))
         .catchError((onError)=> _view.onLoadUsuarioError());
   }
 
+  void signinUsuario(String email, String password){
+    _repository.signin(email,password)
+        .then((c) => _view.onLoadUsuarioComplete(c))
+        .catchError((onError)=> _view.onLoadUsuarioError());
+  }
 }
