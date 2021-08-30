@@ -1,15 +1,16 @@
-import 'dart:async';
-import 'dart:convert';
+import 'package:airelimpio2/data/usuario_data.dart';
 import 'package:airelimpio2/home_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'Controladores/usuario_controler.dart';
 import 'dependency_injection.dart';
+import 'perfil.dart';
 
-void main() async {
-  Injector.configure(Flavor.PROD);
+void main() {
+
   runApp(new MyApp());
 }
 
@@ -36,22 +37,33 @@ class _MainPageState extends State<MainPage> {
 
   int _selectDrawerItem = 4;
 
+  bool _isLoading = true;
+
   late SharedPreferences sharedPreferences;
 
-  String id = '';
-  String nombres = 'Prueba';
-  String apellido = 'Apellido Prueba';
-  int districtId = 0;
-  String correo = 'prueba@unmsm.edu.pe';
+  late Usuario user;
 
+
+
+  String id = '';
 
   @override
   void initState() {
-    super.initState();
-    checkLoginStatus();
 
+    checkLoginStatus();
+    obtenerDatos();
+    super.initState();
   }
 
+  obtenerDatos() async {
+    sharedPreferences = await SharedPreferences.getInstance();
+    user = await usuario_controler().datos(id);
+    sharedPreferences.setString("districtId", user.districtId);
+    setState(() {
+      _isLoading = false;
+    });
+
+  }
 
 
   checkLoginStatus() async {
@@ -69,9 +81,7 @@ class _MainPageState extends State<MainPage> {
 
   _getDrawerItemWidget(int pos){
     switch(pos){
-      case 0: return Center(
-        child: Text("Perfil",style: TextStyle(fontSize: 20),),
-      );
+      case 0: return Perfil();
       case 1: return Center(
         child: Text("Zonas",style: TextStyle(fontSize: 20),),
       );
@@ -99,16 +109,18 @@ class _MainPageState extends State<MainPage> {
         backgroundColor: Colors.lightBlueAccent,
       ),
       drawer: Drawer(
-        child: ListView(
+        child: _isLoading ? new Center(
+          child: new CircularProgressIndicator(),
+        ):ListView(
           children: <Widget>[
             UserAccountsDrawerHeader(
-              accountName: Text(nombres+' '+ apellido),
-              accountEmail: Text(correo),
+              accountName: Text(user.name+' '+ user.surname,style: TextStyle(color: Colors.white)),
+              accountEmail: Text(user.email,style: TextStyle(color: Colors.white)),
               currentAccountPicture: CircleAvatar(
-                backgroundColor: Colors.lightGreenAccent,
+                backgroundColor: Colors.amber,
                 child: Text(
-                    nombres[0],
-                    style: TextStyle(fontSize: 40)
+                    user.name[0],
+                    style: TextStyle(fontSize: 40, color: Colors.white)
                 ),
               ),
               decoration: BoxDecoration(

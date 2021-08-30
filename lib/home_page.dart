@@ -1,10 +1,13 @@
+import 'dart:convert';
+
 import 'package:airelimpio2/data/sensores_data.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:http/http.dart' as http;
 import 'data/usuario_data.dart';
+import 'Controladores/usuario_controler.dart';
 import 'main.dart';
 import 'modules/sensores_presenter.dart';
 import 'modules/usuario_presenter.dart';
@@ -14,21 +17,11 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> implements UsuarioListViewContract{
-
-
-  late UsuarioListPresenter _presenter;
-  late List<Usuario> _usuarios;
+class _LoginPageState extends State<LoginPage> {
 
   bool _isLoading = false;
 
-  bool userLoad = true;
 
-  late Usuario user;
-
-  _LoginPageState(){
-    _presenter = new UsuarioListPresenter(this);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,16 +49,16 @@ class _LoginPageState extends State<LoginPage> implements UsuarioListViewContrac
     );
   }
 
+
+
   signIn() async {
-    //_presenter.signinUsuario(email,password);
 
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    if(!userLoad == true){
-      user = _usuarios[0];
-      if(user.token == "1"){
+      if(token != '0' && token != '2'){
+        print("ok");
         setState(() {
           _isLoading = false;
-          sharedPreferences.setString("id", user.id);
+          sharedPreferences.setString("id", token);
           Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => MainPage()), (Route<dynamic> route) => false);
         });
 
@@ -75,10 +68,11 @@ class _LoginPageState extends State<LoginPage> implements UsuarioListViewContrac
           _isLoading = false;
         });
       }
-    }
 
 
   }
+
+  var token;
 
   Container buttonSection(){
     return Container(
@@ -87,15 +81,12 @@ class _LoginPageState extends State<LoginPage> implements UsuarioListViewContrac
       margin: EdgeInsets.only(top: 30.0),
       padding: EdgeInsets.symmetric(horizontal: 20.0),
       child: RaisedButton(
-        onPressed: (){
-          setState((){
-            _presenter.signinUsuario(emailController.text,passwordController.text);
+        onPressed: () async {
+          setState(() {
             _isLoading = true;
-            //user = _usuarios[0];
           });
-
+          token = await usuario_controler().login(emailController.text,passwordController.text);
           signIn();
-
         },
         elevation: 0.0,
         color: Colors.white,
@@ -156,21 +147,6 @@ class _LoginPageState extends State<LoginPage> implements UsuarioListViewContrac
       )
       ),
     );
-  }
-
-  @override
-  void onLoadUsuarioComplete(List<Usuario> items) {
-
-    setState(() {
-      _usuarios = items;
-      userLoad = false;
-    });
-    // TODO: implement onLoadUsuarioComplete
-  }
-
-  @override
-  void onLoadUsuarioError() {
-    // TODO: implement onLoadUsuarioError
   }
 
 }
