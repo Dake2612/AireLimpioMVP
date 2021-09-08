@@ -6,8 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Controladores/usuario_controler.dart';
-import 'dependency_injection.dart';
 import 'perfil.dart';
+import 'stats.dart';
+import 'zonas_distritos.dart';
 
 void main() {
 
@@ -82,12 +83,8 @@ class _MainPageState extends State<MainPage> {
   _getDrawerItemWidget(int pos){
     switch(pos){
       case 0: return Perfil();
-      case 1: return Center(
-        child: Text("Zonas",style: TextStyle(fontSize: 20),),
-      );
-      case 2: return Center(
-          child: Text("Dispensas",style: TextStyle(fontSize: 20),),
-      );
+      case 1: return Zonas();
+      case 2: return Stats();
       default: return Center(
         child: Text("Bienvenido",style: TextStyle(fontSize: 20),),
       );
@@ -149,8 +146,8 @@ class _MainPageState extends State<MainPage> {
               },
             ),
             ListTile(
-              title: Text('Dispensadores'),
-              leading: Icon(Icons.arrow_forward_ios_rounded),
+              title: Text('Estadisticas'),
+              leading: Icon(Icons.stacked_bar_chart),
               selected: (2 == _selectDrawerItem),
               onTap: (){
                 _onSelectItem(2);

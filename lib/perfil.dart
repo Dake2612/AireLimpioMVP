@@ -14,8 +14,6 @@ class _PerfilState extends State<Perfil> {
 
   bool _isLoading = true;
 
-  var jsonData = null;
-
   late Usuario user;
 
   String id = '';

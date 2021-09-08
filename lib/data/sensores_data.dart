@@ -16,10 +16,7 @@ class Sensor{
 
 }
 
-abstract class SensoresRepository{
-  Future<List<Sensor>> fetchSensores(String id);
 
-}
 
 class FetchDataException implements Exception{
   final _message;

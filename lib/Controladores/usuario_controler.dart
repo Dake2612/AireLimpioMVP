@@ -5,8 +5,8 @@ import 'package:http/http.dart' as http;
 
 class usuario_controler {
 
-  String userUrl = 'http://192.168.100.83:4000/api/users/';
-  String singInUrl = 'http://192.168.100.83:4000/api/users/signin';
+  String userUrl = 'https://backend-aire-limpio.herokuapp.com/api/users/';
+  String singInUrl = 'https://backend-aire-limpio.herokuapp.com/api/users/signin';
 
   Future<Usuario> datos(String id) async{
     http.Response response = await http.get(Uri.parse(userUrl+id));

@@ -9,8 +9,6 @@ import 'package:http/http.dart' as http;
 import 'data/usuario_data.dart';
 import 'Controladores/usuario_controler.dart';
 import 'main.dart';
-import 'modules/sensores_presenter.dart';
-import 'modules/usuario_presenter.dart';
 
 class LoginPage extends StatefulWidget {
   @override

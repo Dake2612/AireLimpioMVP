@@ -4,13 +4,13 @@ import 'package:airelimpio2/data/sensores_data.dart';
 import 'package:http/http.dart' as http;
 
 class sensor_controller {
-  String districtUrl = 'http://192.168.100.83:4000/api/districts/sensors/';
+  String districtUrl = 'https://backend-aire-limpio.herokuapp.com/api/districts/sensors/';
 
   @override
   Future<List<Sensor>> fetchSensores(String id) async{
     http.Response response = await http.get(Uri.parse(districtUrl+id));
     //print(response.body);
-    final List responseBody = json.decode(response.body);
+    final List responseBody = jsonDecode(response.body);
     final statusCode = response.statusCode;
     if (statusCode != 200 || responseBody == null) {
       throw new FetchDataException(
